@@ -80,26 +80,87 @@ public class BotInterne implements Joueur {
         int groupe4PierreNoire = 0;
         int groupe5PierreNoire = 0;
 
-        int groupeTemp = 1;
+        int alignNOSE = 1;
+        int alignSONE = 1;
+        int alignOE = 1;
+        int alignNS = 1;
 
-        int alignNOSE = 0;
-        int alignSONE = 0;
-        int alignOE = 0;
-        int alignNS = 0;
-
+        // additionne les pions successifs du nord-ouest et sud-est
         alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos()) + positionDiagonaleSE(grille, position); 
 
+        //additionne les pions successifs du sud-ouest et du nord-est 
         alignSONE = alignSONE + positionDiagonaleSO(grille, nextPos.getPos()) + positionDiagonaleNE(grille, position); 
 
+        //additionne les pions de l'ouest et de l'est
         alignOE = alignOE + positionOuest(grille, nextPos.getPos()) + positionEst(grille, position);
         
+        //additionne les pions du nord et du sud
         alignNS= alignNS + positionNord(grille, nextPos.getPos()) + positionSud(grille, position);
+
+        //Si le pion n'est à côté d'aucun autre pion, groupe5pierre = 1; 
+        //Le jeu sera terminé.
+        if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+            groupe5PierreNoire = groupe5PierreNoire + 1;
+        }
+        //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+        if((alignNOSE == 1) || (alignSONE == 1) || (alignOE == 1) || (alignNS == 1)){
+            groupe1PierreNoire = groupe1PierreNoire + 1;
+        }
+
+        int nbCol = grille.getData()[0].length;
+        // on vérifie dans quel grouupe sont les autres pions sur le plateau
+        for(int i = 0; i < grille.getData().length; i++){
+            for(int j = 0; j < nbCol; j++){
+
+                Position posTemp = new Position(i, j);
+                // à faire : un if qui permettra de savoir pour quelle couleur on fait le compte
+                //if(){}
+                alignNOSE = 1;
+                alignSONE = 1;
+                alignOE = 1;
+                alignNS = 1;
+
+                // additionne les pions successifs du nord-ouest et sud-est
+                alignNOSE = alignNOSE + positionDiagonaleNO(grille, posTemp) + positionDiagonaleSE(grille, posTemp); 
+
+                //additionne les pions successifs du sud-ouest et du nord-est 
+                alignSONE = alignSONE + positionDiagonaleSO(grille, posTemp) + positionDiagonaleNE(grille, posTemp); 
+
+                //additionne les pions de l'ouest et de l'est
+                alignOE = alignOE + positionOuest(grille, posTemp) + positionEst(grille, posTemp);
+                
+                //additionne les pions du nord et du sud
+                alignNS= alignNS + positionNord(grille, posTemp) + positionSud(grille, posTemp);
+
+                if((alignNOSE == 4) || (alignSONE == 4) || (alignOE == 4) || (alignNS == 4)){
+                    groupe4PierreNoire = groupe4PierreNoire + 1;
+                }
+
+                if((alignNOSE == 3) || (alignSONE == 3) || (alignOE == 3) || (alignNS == 3)){
+                    groupe3PierreNoire = groupe3PierreNoire + 1;
+                }
+
+                if((alignNOSE == 2) || (alignSONE == 2) || (alignOE == 2) || (alignNS == 2)){
+                    groupe2PierreNoire = groupe2PierreNoire + 1;
+                }
+
+                if((alignNOSE == 1) || (alignSONE == 2) || (alignOE == 2) || (alignNS == 2)){
+                    groupe1PierreNoire = groupe1PierreNoire + 1;
+                }
+
+                if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+                    groupe5PierreNoire = groupe5PierreNoire + 1;
+                }
+
+            }
+        }
 
         return null;
     }
 
+
     //ici, on fait la diagonale l+1 et c+ 1 (SudEst)
-    //Ici le param poisition sert à compter les pions alignés
+    //Ici le nbPierreAlignDiag sert à compter les pions alignés
     // ex utilisation : positionDiagonaleEval(grille, nextPos.getPos())
     private int positionDiagonaleSE(Grille grille, Position position) {
 
