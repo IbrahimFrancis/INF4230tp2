@@ -58,6 +58,10 @@ public class BotInterne implements Joueur {
                 }
             }
         }
+        if(isMaxTurn(grille))
+            System.out.println("max");
+        else
+            System.out.println("min");
         listOfPosEvals.sort((PositionWithEval posEval1, PositionWithEval posEval2) -> posEval1.getEval() - posEval2.getEval());
 
         return listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
@@ -66,7 +70,25 @@ public class BotInterne implements Joueur {
     private PositionWithEval evaluateNextGrid(Grille grille, Position nextPos) {
         // return new PositionWithEval(new Position(1, 2), 5);
         return null;
-	}
+    }
+
+    private boolean isMaxTurn(Grille grille){
+        boolean result = false;
+        int turnNumber = grille.getNbCases() - grille.getNbCasesLibres();
+        if(isNumEven(turnNumber))
+            result = true;
+
+        return result;
+    }
+
+    private boolean isNumEven(int number){
+        boolean result = false;
+
+        if(number % 2 == 0)
+            result = true;
+        
+        return result;
+    }
 
 	@Override
     public String getAuteurs() {
