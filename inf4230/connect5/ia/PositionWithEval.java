@@ -4,7 +4,7 @@ import inf4230.connect5.Position;
 
 public class PositionWithEval{
     private Position pos;
-    private int eval;
+    private int eval = 0;
 
     public PositionWithEval(Position pos, int eval){
         this.pos = pos;

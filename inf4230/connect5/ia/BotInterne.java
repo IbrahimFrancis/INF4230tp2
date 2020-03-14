@@ -67,9 +67,214 @@ public class BotInterne implements Joueur {
         return listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
     }
 
-    private PositionWithEval evaluateNextGrid(Grille grille, Position nextPos) {
+    private PositionWithEval evaluateNextGrid(Grille grille, PositionWithEval nextPos) {
         // return new PositionWithEval(new Position(1, 2), 5);
+        int groupe1PierreBlanche = 0;
+        int groupe2PierreBlanche = 0;
+        int groupe3PierreBlanche = 0;
+        int groupe4PierreBlanche = 0;
+        int groupe5PierreBlanche = 0;
+        int groupe1PierreNoire = 0;
+        int groupe2PierreNoire = 0;
+        int groupe3PierreNoire = 0;
+        int groupe4PierreNoire = 0;
+        int groupe5PierreNoire = 0;
+
+        int groupeTemp = 1;
+
+        int alignNOSE = 0;
+        int alignSONE = 0;
+        int alignOE = 0;
+        int alignNS = 0;
+
+        alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos()) + positionDiagonaleSE(grille, position); 
+
+        alignSONE = alignSONE + positionDiagonaleSO(grille, nextPos.getPos()) + positionDiagonaleNE(grille, position); 
+
+        alignOE = alignOE + positionOuest(grille, nextPos.getPos()) + positionEst(grille, position);
+        
+        alignNS= alignNS + positionNord(grille, nextPos.getPos()) + positionSud(grille, position);
+
         return null;
+    }
+
+    //ici, on fait la diagonale l+1 et c+ 1 (SudEst)
+    //Ici le param poisition sert à compter les pions alignés
+    // ex utilisation : positionDiagonaleEval(grille, nextPos.getPos())
+    private int positionDiagonaleSE(Grille grille, Position position) {
+
+        int nbPierreAlignDiagonale = 0;
+
+        int ligneTemp = (position.ligne) + 1;
+        int colonneTemp = (position.colonne) + 1;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if((ligneTemp < grille.getData().length )&& (colonneTemp < grille.getData()[0].length )){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagSE
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionDiagonaleEval(grille, posTemp);
+                nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
+            }
+        }
+        return nbPierreAlignDiagonale;
+    }
+
+    private int positionDiagonaleSO(Grille grille, Position position) {
+
+        int nbPierreAlignDiagonale = 0;
+
+        int ligneTemp = (position.ligne) + 1;
+        int colonneTemp = (position.colonne) - 1;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if((ligneTemp < grille.getData().length )&& (colonneTemp >= 0 )){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagSO
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionDiagonaleSO(grille, posTemp);
+                nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
+            }
+        }
+        return nbPierreAlignDiagonale;
+    }
+
+    private int positionDiagonaleNE(Grille grille, Position position) {
+
+        int nbPierreAlignDiagonale = 0;
+
+        int ligneTemp = (position.ligne) - 1;
+        int colonneTemp = (position.colonne) + 1;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if((ligneTemp >=0 )&& (colonneTemp < grille.getData()[0].length)){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignNE 
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionDiagonaleNE(grille, posTemp);
+                nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
+            }
+        }
+        return nbPierreAlignDiagonale;
+    }
+
+    private int positionDiagonaleNO(Grille grille, Position position) {
+
+        int nbPierreAlignDiagonale = 0;
+
+        int ligneTemp = (position.ligne) - 1;
+        int colonneTemp = (position.colonne) - 1;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if((ligneTemp >=0 )&& (colonneTemp >= 0)){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagNO 
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionDiagonaleNO(grille, posTemp);
+                nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
+            }
+        }
+        return nbPierreAlignDiagonale;
+    }
+
+    private int positionNord(Grille grille, Position position) {
+
+        int nbPierreAlignNord = 0;
+
+        int ligneTemp = (position.ligne) - 1;
+        int colonneTemp = position.colonne;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if(ligneTemp >=0 ){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignNord 
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionNord(grille, posTemp);
+                nbPierreAlignNord = nbPierreAlignNord + 1;
+            }
+        }
+        return nbPierreAlignNord;
+    }
+
+    private int positionSud(Grille grille, Position position) {
+
+        int nbPierreAlignSud = 0;
+
+        int ligneTemp = (position.ligne) + 1;
+        int colonneTemp = position.colonne;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if(ligneTemp < grille.getData().length){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignSud 
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionSud(grille, posTemp);
+                nbPierreAlignSud = nbPierreAlignSud + 1;
+            }
+        }
+        return nbPierreAlignSud;
+    }
+
+    private int positionEst(Grille grille, Position position) {
+
+        int nbPierreAlignEst = 0;
+
+        int ligneTemp = position.ligne;
+        int colonneTemp = (position.colonne) + 1;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if(colonneTemp >= grille.getData()[0].length){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbPierreAlignEst 
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionEst(grille, posTemp);
+                nbPierreAlignEst = nbPierreAlignEst + 1;
+            }
+        }
+        return nbPierreAlignEst;
+    }
+
+    private int positionOuest(Grille grille, Position position) {
+
+        int nbPierreAlignOuest = 0;
+
+        int ligneTemp = position.ligne;
+        int colonneTemp = (position.colonne) - 1;
+        Position posTemp = new Position();
+
+        //vérifie si on est dans les limites de la grille
+        if(colonneTemp >= 0){
+            posTemp.ligne = ligneTemp;
+            posTemp.colonne = colonneTemp;
+
+            //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignOuest
+            if(grille.get(posTemp) == grille.get(posTemp)){
+                positionOuest(grille, posTemp);
+                nbPierreAlignOuest = nbPierreAlignOuest + 1;
+            }
+        }
+        return nbPierreAlignOuest;
     }
 
     private boolean isMaxTurn(Grille grille){
@@ -92,7 +297,7 @@ public class BotInterne implements Joueur {
 
 	@Override
     public String getAuteurs() {
-        return "Philip D'Costa (DCOP17069401)  et  Prénom2 Nom2 (CODE00000002)";
+        return "Philip D'Costa (DCOP17069401)  et  Ibrahim Francis Coulibaly (COUI03069706)";
     }
 
 }
