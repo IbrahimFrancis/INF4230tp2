@@ -69,11 +69,6 @@ public class BotInterne implements Joueur {
         
         listOfPosEvals.sort((PositionWithEval posEval1, PositionWithEval posEval2) -> posEval1.getEval() - posEval2.getEval());
 
-        // if(isMaxTurn)
-        //     result = listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
-        // else
-        //     result = listOfPosEvals.get(0).getPos();
-
         int bestEval;
         if(isMaxTurn)
             bestEval = listOfPosEvals.get(listOfPosEvals.size() - 1).getEval();
