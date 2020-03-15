@@ -12,7 +12,9 @@ import inf4230.connect5.Grille;
 import inf4230.connect5.Joueur;
 import inf4230.connect5.Position;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class BotInterne implements Joueur {
 
@@ -67,10 +69,19 @@ public class BotInterne implements Joueur {
         
         listOfPosEvals.sort((PositionWithEval posEval1, PositionWithEval posEval2) -> posEval1.getEval() - posEval2.getEval());
 
+        // if(isMaxTurn)
+        //     result = listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
+        // else
+        //     result = listOfPosEvals.get(0).getPos();
+
+        int bestEval;
         if(isMaxTurn)
-            result = listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
+            bestEval = listOfPosEvals.get(listOfPosEvals.size() - 1).getEval();
         else
-            result = listOfPosEvals.get(0).getPos();
+            bestEval = listOfPosEvals.get(0).getEval();
+        List<PositionWithEval> listOptimalResults = listOfPosEvals.stream().filter(x -> x.getEval() == bestEval).collect(Collectors.toList());
+        int choice = random.nextInt(listOptimalResults.size());
+        result = listOptimalResults.get(choice).getPos();
 
         // System.out.println("Turn Max: " + isMaxTurn);
         // listOfPosEvals.forEach(x -> System.out.print(x.getEval() + " -- " + x.getPos() + " | "));
