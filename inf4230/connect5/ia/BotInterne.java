@@ -47,27 +47,30 @@ public class BotInterne implements Joueur {
     public Position getAction(Grille grille, int delais) {
         ArrayList<PositionWithEval> listOfPosEvals = new ArrayList<>();
 
+        if(isMaxTurn(grille))
+            System.out.println("max");
+
+        else
+            System.out.println("min");
+        
         int nbCol = grille.getData()[0].length;
         for(int i = 0; i < grille.getData().length; i++){
             for(int j = 0; j < nbCol; j++){
-                Position nextPos = new Position(i, j);
+                PositionWithEval nextPos = new Position(i, j);
 
                 if(grille.getData()[i][j] == 0){
-                    PositionWithEval posEval = evaluateNextGrid(grille, nextPos);
+                    PositionWithEval posEval = evaluateNextGrid(grille, nextPos, isMaxTurn(grille));
                     listOfPosEvals.add(posEval);
                 }
             }
         }
-        if(isMaxTurn(grille))
-            System.out.println("max");
-        else
-            System.out.println("min");
+        
         listOfPosEvals.sort((PositionWithEval posEval1, PositionWithEval posEval2) -> posEval1.getEval() - posEval2.getEval());
 
         return listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
     }
 
-    private PositionWithEval evaluateNextGrid(Grille grille, PositionWithEval nextPos) {
+    private PositionWithEval evaluateNextGrid(Grille grille, PositionWithEval nextPos, boolean actualPlayerisMax) {
         // return new PositionWithEval(new Position(1, 2), 5);
         int groupe1PierreBlanche = 0;
         int groupe2PierreBlanche = 0;
@@ -80,31 +83,152 @@ public class BotInterne implements Joueur {
         int groupe4PierreNoire = 0;
         int groupe5PierreNoire = 0;
 
+        int evalGr1pierre = 0;
+        int evalGr2pierre = 0;
+        int evalGr3pierre = 0;
+        int evalGr4pierre = 0;
+        int evalGr5pierre = 0;// on le garde pour l'instant mais pas vraiment besoin car jeux sera terminé s'il y a ça
+        int evalTotal = 0;
+
+        int joueurActuel = 1; //Par défaut, on est sur max.
+
+        if (actualPlayerisMax == false){
+            joueurActuel = 2;
+        }
+        
         int alignNOSE = 1;
         int alignSONE = 1;
         int alignOE = 1;
         int alignNS = 1;
 
         // additionne les pions successifs du nord-ouest et sud-est
-        alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos()) + positionDiagonaleSE(grille, position); 
+        alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleSE(grille, position, joueurActuel); 
 
         //additionne les pions successifs du sud-ouest et du nord-est 
-        alignSONE = alignSONE + positionDiagonaleSO(grille, nextPos.getPos()) + positionDiagonaleNE(grille, position); 
+        alignSONE = alignSONE + positionDiagonaleSO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleNE(grille, position, joueurActuel); 
 
         //additionne les pions de l'ouest et de l'est
-        alignOE = alignOE + positionOuest(grille, nextPos.getPos()) + positionEst(grille, position);
+        alignOE = alignOE + positionOuest(grille, nextPos.getPos(), joueurActuel) + positionEst(grille, position, joueurActuel);
         
         //additionne les pions du nord et du sud
-        alignNS= alignNS + positionNord(grille, nextPos.getPos()) + positionSud(grille, position);
+        alignNS= alignNS + positionNord(grille, nextPos.getPos(), joueurActuel) + positionSud(grille, position, joueurActuel);
 
         //Si le pion n'est à côté d'aucun autre pion, groupe5pierre = 1; 
         //Le jeu sera terminé.
-        if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
-            groupe5PierreNoire = groupe5PierreNoire + 1;
-        }
-        //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
-        if((alignNOSE == 1) || (alignSONE == 1) || (alignOE == 1) || (alignNS == 1)){
-            groupe1PierreNoire = groupe1PierreNoire + 1;
+        
+        if (actualPlayerisMax == false){
+            if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+                groupe5PierreBlanche = groupe5PierreBlanche + 1;
+            }
+            //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+            if(alignNOSE == 4){
+                groupe4PierreBlanche = groupe4PierreBlanche + 1;
+            }
+            if(alignSONE == 4){
+                groupe4PierreBlanche = groupe4PierreBlanche + 1;
+            }
+            if(alignOE == 4){
+                groupe4PierreBlanche = groupe4PierreBlanche + 1;
+            }
+            if(alignNS == 4){
+                groupe4PierreBlanche = groupe4PierreBlanche + 1;
+            }
+    
+            if(alignNOSE == 3){
+                groupe3PierreBlanche = groupe3PierreBlanche + 1;
+            }
+            if(alignSONE == 3){
+                groupe3PierreBlanche = groupe3PierreBlanche + 1;
+            }
+            if(alignOE == 3){
+                groupe3PierreBlanche = groupe3PierreBlanche + 1;
+            }
+            if(alignNS == 3){
+                groupe3PierreBlanche = groupe3PierreBlanche + 1;
+            }
+    
+            if(alignNOSE == 2){
+                groupe2PierreBlanche = groupe2PierreBlanche + 1;
+            }
+            if(alignSONE == 2){
+                groupe2PierreBlanche = groupe2PierreBlanche + 1;
+            }
+            if(alignOE == 2){
+                groupe2PierreBlanche = groupe2PierreBlanche + 1;
+            }
+            if(alignNS == 2){
+                groupe2PierreBlanche = groupe2PierreBlanche + 1;
+            }
+    
+            if(alignNOSE == 1){
+                groupe1PierreBlanche = groupe1PierreBlanche + 1;
+            }
+            if(alignSONE == 1){
+                groupe1PierreBlanche = groupe1PierreBlanche + 1;
+            }
+            if(alignOE == 1){
+                groupe1PierreBlanche = groupe1PierreBlanche + 1;
+            }
+            if(alignNS == 1){
+                groupe1PierreBlanche = groupe1PierreBlanche + 1;
+            }
+        } else {
+
+            if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+                groupe5PierreNoire = groupe5PierreNoire + 1;
+            }
+            //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+            if(alignNOSE == 4){
+                groupe4PierreNoire = groupe4PierreNoire + 1;
+            }
+            if(alignSONE == 4){
+                groupe4PierreNoire = groupe4PierreNoire + 1;
+            }
+            if(alignOE == 4){
+                groupe4PierreNoire = groupe4PierreNoire + 1;
+            }
+            if(alignNS == 4){
+                groupe4PierreNoire = groupe4PierreNoire + 1;
+            }
+
+            if(alignNOSE == 3){
+                groupe3PierreNoire = groupe3PierreNoire + 1;
+            }
+            if(alignSONE == 3){
+                groupe3PierreNoire = groupe3PierreNoire + 1;
+            }
+            if(alignOE == 3){
+                groupe3PierreNoire = groupe3PierreNoire + 1;
+            }
+            if(alignNS == 3){
+                groupe3PierreNoire = groupe3PierreNoire + 1;
+            }
+
+            if(alignNOSE == 2){
+                groupe2PierreNoire = groupe2PierreNoire + 1;
+            }
+            if(alignSONE == 2){
+                groupe2PierreNoire = groupe2PierreNoire + 1;
+            }
+            if(alignOE == 2){
+                groupe2PierreNoire = groupe2PierreNoire + 1;
+            }
+            if(alignNS == 2){
+                groupe2PierreNoire = groupe2PierreNoire + 1;
+            }
+
+            if(alignNOSE == 1){
+                groupe1PierreNoire = groupe1PierreNoire + 1;
+            }
+            if(alignSONE == 1){
+                groupe1PierreNoire = groupe1PierreNoire + 1;
+            }
+            if(alignOE == 1){
+                groupe1PierreNoire = groupe1PierreNoire + 1;
+            }
+            if(alignNS == 1){
+                groupe1PierreNoire = groupe1PierreNoire + 1;
+            }
         }
 
         int nbCol = grille.getData()[0].length;
@@ -112,57 +236,189 @@ public class BotInterne implements Joueur {
         for(int i = 0; i < grille.getData().length; i++){
             for(int j = 0; j < nbCol; j++){
 
-                Position posTemp = new Position(i, j);
-                // à faire : un if qui permettra de savoir pour quelle couleur on fait le compte
-                //if(){}
-                alignNOSE = 1;
-                alignSONE = 1;
-                alignOE = 1;
-                alignNS = 1;
-
-                // additionne les pions successifs du nord-ouest et sud-est
-                alignNOSE = alignNOSE + positionDiagonaleNO(grille, posTemp) + positionDiagonaleSE(grille, posTemp); 
-
-                //additionne les pions successifs du sud-ouest et du nord-est 
-                alignSONE = alignSONE + positionDiagonaleSO(grille, posTemp) + positionDiagonaleNE(grille, posTemp); 
-
-                //additionne les pions de l'ouest et de l'est
-                alignOE = alignOE + positionOuest(grille, posTemp) + positionEst(grille, posTemp);
-                
-                //additionne les pions du nord et du sud
-                alignNS= alignNS + positionNord(grille, posTemp) + positionSud(grille, posTemp);
-
-                if((alignNOSE == 4) || (alignSONE == 4) || (alignOE == 4) || (alignNS == 4)){
-                    groupe4PierreNoire = groupe4PierreNoire + 1;
+                if(grille.getData()[i] [j] != 0){
+                    Position posTemp = new Position(i, j);
                 }
 
-                if((alignNOSE == 3) || (alignSONE == 3) || (alignOE == 3) || (alignNS == 3)){
-                    groupe3PierreNoire = groupe3PierreNoire + 1;
-                }
+                if(grille.getData()[i][j] == 1){
 
-                if((alignNOSE == 2) || (alignSONE == 2) || (alignOE == 2) || (alignNS == 2)){
-                    groupe2PierreNoire = groupe2PierreNoire + 1;
-                }
+                    Position posTemp = new Position(i, j);
+                    // à faire : un if qui permettra de savoir pour quelle couleur on fait le compte
+                    //if(){}
+                    alignNOSE = 1;
+                    alignSONE = 1;
+                    alignOE = 1;
+                    alignNS = 1;
 
-                if((alignNOSE == 1) || (alignSONE == 2) || (alignOE == 2) || (alignNS == 2)){
-                    groupe1PierreNoire = groupe1PierreNoire + 1;
-                }
+                    // additionne les pions successifs du nord-ouest et sud-est
+                    alignNOSE = alignNOSE + positionDiagonaleNO(grille, posTemp, 1) + positionDiagonaleSE(grille, posTemp, 1); 
 
-                if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
-                    groupe5PierreNoire = groupe5PierreNoire + 1;
+                    //additionne les pions successifs du sud-ouest et du nord-est 
+                    alignSONE = alignSONE + positionDiagonaleSO(grille, posTemp, 1) + positionDiagonaleNE(grille, posTemp, 1); 
+
+                    //additionne les pions de l'ouest et de l'est
+                    alignOE = alignOE + positionOuest(grille, posTemp, 1) + positionEst(grille, posTemp, 1);
+                    
+                    //additionne les pions du nord et du sud
+                    alignNS= alignNS + positionNord(grille, posTemp, 1) + positionSud(grille, posTemp, 1);
+
+                    if(alignNOSE == 4){
+                        groupe4PierreNoire = groupe4PierreNoire + 1;
+                    }
+                    if(alignSONE == 4){
+                        groupe4PierreNoire = groupe4PierreNoire + 1;
+                    }
+                    if(alignOE == 4){
+                        groupe4PierreNoire = groupe4PierreNoire + 1;
+                    }
+                    if(alignNS == 4){
+                        groupe4PierreNoire = groupe4PierreNoire + 1;
+                    }
+
+                    if(alignNOSE == 3){
+                        groupe3PierreNoire = groupe3PierreNoire + 1;
+                    }
+                    if(alignSONE == 3){
+                        groupe3PierreNoire = groupe3PierreNoire + 1;
+                    }
+                    if(alignOE == 3){
+                        groupe3PierreNoire = groupe3PierreNoire + 1;
+                    }
+                    if(alignNS == 3){
+                        groupe3PierreNoire = groupe3PierreNoire + 1;
+                    }
+
+                    if(alignNOSE == 2){
+                        groupe2PierreNoire = groupe2PierreNoire + 1;
+                    }
+                    if(alignSONE == 2){
+                        groupe2PierreNoire = groupe2PierreNoire + 1;
+                    }
+                    if(alignOE == 2){
+                        groupe2PierreNoire = groupe2PierreNoire + 1;
+                    }
+                    if(alignNS == 2){
+                        groupe2PierreNoire = groupe2PierreNoire + 1;
+                    }
+
+                    if(alignNOSE == 1){
+                        groupe1PierreNoire = groupe1PierreNoire + 1;
+                    }
+                    if(alignSONE == 1){
+                        groupe1PierreNoire = groupe1PierreNoire + 1;
+                    }
+                    if(alignOE == 1){
+                        groupe1PierreNoire = groupe1PierreNoire + 1;
+                    }
+                    if(alignNS == 1){
+                        groupe1PierreNoire = groupe1PierreNoire + 1;
+                    }
+
+                } else if(grille.getData()[i][j] == 2){
+
+                    alignNOSE = 1;
+                    alignSONE = 1;
+                    alignOE = 1;
+                    alignNS = 1;
+
+                    alignNOSE = alignNOSE + positionDiagonaleNO(grille, posTemp, 1) + positionDiagonaleSE(grille, posTemp, 1); 
+
+                    //additionne les pions successifs du sud-ouest et du nord-est 
+                    alignSONE = alignSONE + positionDiagonaleSO(grille, posTemp, 1) + positionDiagonaleNE(grille, posTemp, 1); 
+
+                    //additionne les pions de l'ouest et de l'est
+                    alignOE = alignOE + positionOuest(grille, posTemp, 1) + positionEst(grille, posTemp, 1);
+                    
+                    //additionne les pions du nord et du sud
+                    alignNS= alignNS + positionNord(grille, posTemp, 1) + positionSud(grille, posTemp, 1);
+
+                    if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+                        groupe5PierreBlanche = groupe5PierreBlanche + 1;
+                    }
+                    //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+                    if(alignNOSE == 4){
+                        groupe4PierreBlanche = groupe4PierreBlanche + 1;
+                    }
+                    if(alignSONE == 4){
+                        groupe4PierreBlanche = groupe4PierreBlanche + 1;
+                    }
+                    if(alignOE == 4){
+                        groupe4PierreBlanche = groupe4PierreBlanche + 1;
+                    }
+                    if(alignNS == 4){
+                        groupe4PierreBlanche = groupe4PierreBlanche + 1;
+                    }
+            
+                    if(alignNOSE == 3){
+                        groupe3PierreBlanche = groupe3PierreBlanche + 1;
+                    }
+                    if(alignSONE == 3){
+                        groupe3PierreBlanche = groupe3PierreBlanche + 1;
+                    }
+                    if(alignOE == 3){
+                        groupe3PierreBlanche = groupe3PierreBlanche + 1;
+                    }
+                    if(alignNS == 3){
+                        groupe3PierreBlanche = groupe3PierreBlanche + 1;
+                    }
+            
+                    if(alignNOSE == 2){
+                        groupe2PierreBlanche = groupe2PierreBlanche + 1;
+                    }
+                    if(alignSONE == 2){
+                        groupe2PierreBlanche = groupe2PierreBlanche + 1;
+                    }
+                    if(alignOE == 2){
+                        groupe2PierreBlanche = groupe2PierreBlanche + 1;
+                    }
+                    if(alignNS == 2){
+                        groupe2PierreBlanche = groupe2PierreBlanche + 1;
+                    }
+            
+                    if(alignNOSE == 1){
+                        groupe1PierreBlanche = groupe1PierreBlanche + 1;
+                    }
+                    if(alignSONE == 1){
+                        groupe1PierreBlanche = groupe1PierreBlanche + 1;
+                    }
+                    if(alignOE == 1){
+                        groupe1PierreBlanche = groupe1PierreBlanche + 1;
+                    }
+                    if(alignNS == 1){
+                        groupe1PierreBlanche = groupe1PierreBlanche + 1;
+                    }
                 }
 
             }
         }
 
-        return null;
+        if (actualPlayerisMax == true){
+            evalGr1pierre = groupe1PierreNoire - groupe1PierreBlanche;
+            evalGr2pierre = groupe2PierreNoire - groupe2PierreBlanche;
+            evalGr3pierre = groupe3PierreNoire - groupe3PierreBlanche;
+            evalGr4pierre = groupe4PierreNoire - groupe4PierreBlanche;
+            evalGr5pierre = groupe5PierreNoire - groupe5PierreBlanche;
+        } else {
+            evalGr1pierre = groupe1PierreBlanche - groupe1PierreNoire;
+            evalGr2pierre = groupe2PierreBlanche - groupe2PierreNoire;
+            evalGr3pierre = groupe3PierreBlanche - groupe3PierreNoire;
+            evalGr4pierre = groupe4PierreBlanche - groupe4PierreNoire;
+            evalGr5pierre = groupe5PierreBlanche - groupe5PierreNoire;
+        }
+
+        evalTotal = evalGr1pierre + (evalGr2pierre*10) + (evalGr3pierre*100) + (evalGr4pierre*1000) + (evalGr5pierre*10000);
+
+        nextPos.setEval(evalTotal);
+
+        return nextPos;
     }
 
 
     //ici, on fait la diagonale l+1 et c+ 1 (SudEst)
     //Ici le nbPierreAlignDiag sert à compter les pions alignés
     // ex utilisation : positionDiagonaleEval(grille, nextPos.getPos())
-    private int positionDiagonaleSE(Grille grille, Position position) {
+    
+    private int positionDiagonaleSE(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignDiagonale = 0;
 
@@ -176,15 +432,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagSE
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionDiagonaleEval(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionDiagonaleEval(grille, posTemp, joueur);
                 nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
             }
         }
         return nbPierreAlignDiagonale;
     }
 
-    private int positionDiagonaleSO(Grille grille, Position position) {
+    private int positionDiagonaleSO(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignDiagonale = 0;
 
@@ -198,15 +454,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagSO
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionDiagonaleSO(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionDiagonaleSO(grille, posTemp, joueur);
                 nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
             }
         }
         return nbPierreAlignDiagonale;
     }
 
-    private int positionDiagonaleNE(Grille grille, Position position) {
+    private int positionDiagonaleNE(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignDiagonale = 0;
 
@@ -220,15 +476,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignNE 
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionDiagonaleNE(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionDiagonaleNE(grille, posTemp, joueur);
                 nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
             }
         }
         return nbPierreAlignDiagonale;
     }
 
-    private int positionDiagonaleNO(Grille grille, Position position) {
+    private int positionDiagonaleNO(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignDiagonale = 0;
 
@@ -242,15 +498,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagNO 
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionDiagonaleNO(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionDiagonaleNO(grille, posTemp, joueur);
                 nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
             }
         }
         return nbPierreAlignDiagonale;
     }
 
-    private int positionNord(Grille grille, Position position) {
+    private int positionNord(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignNord = 0;
 
@@ -264,15 +520,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignNord 
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionNord(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionNord(grille, posTemp, joueur);
                 nbPierreAlignNord = nbPierreAlignNord + 1;
             }
         }
         return nbPierreAlignNord;
     }
 
-    private int positionSud(Grille grille, Position position) {
+    private int positionSud(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignSud = 0;
 
@@ -286,15 +542,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignSud 
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionSud(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionSud(grille, posTemp, joueur);
                 nbPierreAlignSud = nbPierreAlignSud + 1;
             }
         }
         return nbPierreAlignSud;
     }
 
-    private int positionEst(Grille grille, Position position) {
+    private int positionEst(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignEst = 0;
 
@@ -308,15 +564,15 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbPierreAlignEst 
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionEst(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionEst(grille, posTemp, joueur);
                 nbPierreAlignEst = nbPierreAlignEst + 1;
             }
         }
         return nbPierreAlignEst;
     }
 
-    private int positionOuest(Grille grille, Position position) {
+    private int positionOuest(Grille grille, Position position, int joueur) {
 
         int nbPierreAlignOuest = 0;
 
@@ -330,8 +586,8 @@ public class BotInterne implements Joueur {
             posTemp.colonne = colonneTemp;
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignOuest
-            if(grille.get(posTemp) == grille.get(posTemp)){
-                positionOuest(grille, posTemp);
+            if(grille.get(posTemp) == joueur){
+                positionOuest(grille, posTemp, joueur);
                 nbPierreAlignOuest = nbPierreAlignOuest + 1;
             }
         }
