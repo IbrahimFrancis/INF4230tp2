@@ -121,6 +121,18 @@ public class BotInterne implements Joueur {
                 groupe5PierreBlanche = groupe5PierreBlanche + 1;
             }
             //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+            if(alignNOSE == 5){
+                groupe5PierreBlanche = groupe5PierreBlanche + 1;
+            }
+            if(alignSONE == 5){
+                groupe5PierreBlanche = groupe5PierreBlanche + 1;
+            }
+            if(alignOE == 5){
+                groupe5PierreBlanche = groupe5PierreBlanche + 1;
+            }
+            if(alignNS == 5){
+                groupe5PierreBlanche = groupe5PierreBlanche + 1;
+            }
             if(alignNOSE == 4){
                 groupe4PierreBlanche = groupe4PierreBlanche + 1;
             }
@@ -173,11 +185,19 @@ public class BotInterne implements Joueur {
                 groupe1PierreBlanche = groupe1PierreBlanche + 1;
             }
         } else {
-
-            if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+            //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1;
+            if(alignNOSE == 5){
                 groupe5PierreNoire = groupe5PierreNoire + 1;
             }
-            //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+            if(alignSONE == 5){
+                groupe5PierreNoire = groupe5PierreNoire + 1;
+            }
+            if(alignOE == 5){
+                groupe5PierreNoire = groupe5PierreNoire + 1;
+            }
+            if(alignNS == 5){
+                groupe5PierreNoire = groupe5PierreNoire + 1;
+            }
             if(alignNOSE == 4){
                 groupe4PierreNoire = groupe4PierreNoire + 1;
             }
@@ -262,6 +282,18 @@ public class BotInterne implements Joueur {
                     //additionne les pions du nord et du sud
                     alignNS= alignNS + positionNord(grille, posTemp, 1) + positionSud(grille, posTemp, 1);
 
+                    if(alignNOSE == 5){
+                        groupe5PierreNoire = groupe5PierreNoire + 1;
+                    }
+                    if(alignSONE == 5){
+                        groupe5PierreNoire = groupe5PierreNoire + 1;
+                    }
+                    if(alignOE == 5){
+                        groupe5PierreNoire = groupe5PierreNoire + 1;
+                    }
+                    if(alignNS == 5){
+                        groupe5PierreNoire = groupe5PierreNoire + 1;
+                    }
                     if(alignNOSE == 4){
                         groupe4PierreNoire = groupe4PierreNoire + 1;
                     }
@@ -332,10 +364,18 @@ public class BotInterne implements Joueur {
                     //additionne les pions du nord et du sud
                     alignNS= alignNS + positionNord(grille, posTemp, 1) + positionSud(grille, posTemp, 1);
 
-                    if((alignNOSE == 5) || (alignSONE == 5) || (alignOE == 5) || (alignNS == 5)){
+                    if(alignNOSE == 5){
                         groupe5PierreBlanche = groupe5PierreBlanche + 1;
                     }
-                    //Si le pion n'est à côté d'aucun autre pion, groupe1pierre = 1; 
+                    if(alignSONE == 5){
+                        groupe5PierreBlanche = groupe5PierreBlanche + 1;
+                    }
+                    if(alignOE == 5){
+                        groupe5PierreBlanche = groupe5PierreBlanche + 1;
+                    }
+                    if(alignNS == 5){
+                        groupe5PierreBlanche = groupe5PierreBlanche + 1;
+                    }
                     if(alignNOSE == 4){
                         groupe4PierreBlanche = groupe4PierreBlanche + 1;
                     }
