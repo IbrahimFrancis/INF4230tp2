@@ -106,16 +106,16 @@ public class BotInterne implements Joueur {
         int alignNS = 1;
 
         // additionne les pions successifs du nord-ouest et sud-est
-        alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleSE(grille, position, joueurActuel); 
+        alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleSE(grille, nextPos.getPos(), joueurActuel); 
 
         //additionne les pions successifs du sud-ouest et du nord-est 
-        alignSONE = alignSONE + positionDiagonaleSO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleNE(grille, position, joueurActuel); 
+        alignSONE = alignSONE + positionDiagonaleSO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleNE(grille, nextPos.getPos(), joueurActuel); 
 
         //additionne les pions de l'ouest et de l'est
-        alignOE = alignOE + positionOuest(grille, nextPos.getPos(), joueurActuel) + positionEst(grille, position, joueurActuel);
+        alignOE = alignOE + positionOuest(grille, nextPos.getPos(), joueurActuel) + positionEst(grille, nextPos.getPos(), joueurActuel);
         
         //additionne les pions du nord et du sud
-        alignNS= alignNS + positionNord(grille, nextPos.getPos(), joueurActuel) + positionSud(grille, position, joueurActuel);
+        alignNS= alignNS + positionNord(grille, nextPos.getPos(), joueurActuel) + positionSud(grille, nextPos.getPos(), joueurActuel);
 
         //Si le pion n'est à côté d'aucun autre pion, groupe5pierre = 1; 
         //Le jeu sera terminé.
@@ -260,15 +260,10 @@ public class BotInterne implements Joueur {
         for(int i = 0; i < grille.getData().length; i++){
             for(int j = 0; j < nbCol; j++){
 
-                if(grille.getData()[i] [j] != 0){
-                    Position posTemp = new Position(i, j);
-                }
-
                 if(grille.getData()[i][j] == 1){
 
                     Position posTemp = new Position(i, j);
-                    // à faire : un if qui permettra de savoir pour quelle couleur on fait le compte
-                    //if(){}
+                    
                     alignNOSE = 1;
                     alignSONE = 1;
                     alignOE = 1;
@@ -356,6 +351,8 @@ public class BotInterne implements Joueur {
                     alignSONE = 1;
                     alignOE = 1;
                     alignNS = 1;
+
+                    Position posTemp = new Position(i, j);
 
                     alignNOSE = alignNOSE + positionDiagonaleNO(grille, posTemp, 1) + positionDiagonaleSE(grille, posTemp, 1); 
 
@@ -477,7 +474,7 @@ public class BotInterne implements Joueur {
 
             //Si le prochain pion est de la même couleur que le précédent, on augmente nbpierreAlignDiagSE
             if(grille.get(posTemp) == joueur){
-                positionDiagonaleEval(grille, posTemp, joueur);
+                positionDiagonaleSE(grille, posTemp, joueur);
                 nbPierreAlignDiagonale = nbPierreAlignDiagonale + 1;
             }
         }
