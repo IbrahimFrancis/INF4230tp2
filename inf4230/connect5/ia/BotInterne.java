@@ -4,8 +4,8 @@ package inf4230.connect5.ia;
  *
  * Vous pouvez ajouter d'autres classes sous le package inf4230.connect5.ia.
  *
- * Prénom Nom    (CODE00000001)
- * Prénom Nom    (CODE00000002)
+ * Philip D'Costa (DCOP17069401) 
+ * Ibrahim Francis Coulibaly (COUI03069706)
  */
 
 import inf4230.connect5.Grille;
@@ -40,26 +40,26 @@ public class BotInterne implements Joueur {
     //                 casesvides.add(l*nbcol+c);
     //     int choix = random.nextInt(casesvides.size());
     //     choix = casesvides.get(choix);
+    //     // if(isMaxTurn(grille))
+    //     //     System.out.println("max");
+    //     // else
+    //     //     System.out.println("min");
     //     return new Position(choix / nbcol, choix % nbcol);
     // }
 
     @Override
     public Position getAction(Grille grille, int delais) {
         ArrayList<PositionWithEval> listOfPosEvals = new ArrayList<>();
-
-        if(isMaxTurn(grille))
-            System.out.println("max");
-
-        else
-            System.out.println("min");
+        boolean isMaxTurn = isMaxTurn(grille);
+        Position result = null;
         
         int nbCol = grille.getData()[0].length;
         for(int i = 0; i < grille.getData().length; i++){
             for(int j = 0; j < nbCol; j++){
-                PositionWithEval nextPos = new Position(i, j);
+                PositionWithEval nextPos = new PositionWithEval(new Position(i, j), 0);
 
                 if(grille.getData()[i][j] == 0){
-                    PositionWithEval posEval = evaluateNextGrid(grille, nextPos, isMaxTurn(grille));
+                    PositionWithEval posEval = evaluateNextGrid(grille, nextPos, isMaxTurn);
                     listOfPosEvals.add(posEval);
                 }
             }
@@ -67,7 +67,11 @@ public class BotInterne implements Joueur {
         
         listOfPosEvals.sort((PositionWithEval posEval1, PositionWithEval posEval2) -> posEval1.getEval() - posEval2.getEval());
 
-        return listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
+        if(isMaxTurn)
+            result = listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
+        else
+            result = listOfPosEvals.get(0).getPos();
+        return result;
     }
 
     private PositionWithEval evaluateNextGrid(Grille grille, PositionWithEval nextPos, boolean actualPlayerisMax) {
