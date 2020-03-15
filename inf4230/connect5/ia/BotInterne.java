@@ -71,6 +71,11 @@ public class BotInterne implements Joueur {
             result = listOfPosEvals.get(listOfPosEvals.size() - 1).getPos();
         else
             result = listOfPosEvals.get(0).getPos();
+
+        // System.out.println("Turn Max: " + isMaxTurn);
+        // listOfPosEvals.forEach(x -> System.out.print(x.getEval() + " -- " + x.getPos() + " | "));
+        // System.out.println("Position: " + result.toString());
+
         return result;
     }
 
@@ -100,10 +105,10 @@ public class BotInterne implements Joueur {
             joueurActuel = 2;
         }
         
-        int alignNOSE = 1;
-        int alignSONE = 1;
-        int alignOE = 1;
-        int alignNS = 1;
+        int alignNOSE = 0;
+        int alignSONE = 0;
+        int alignOE = 0;
+        int alignNS = 0;
 
         // additionne les pions successifs du nord-ouest et sud-est
         alignNOSE = alignNOSE + positionDiagonaleNO(grille, nextPos.getPos(), joueurActuel) + positionDiagonaleSE(grille, nextPos.getPos(), joueurActuel); 
@@ -264,10 +269,10 @@ public class BotInterne implements Joueur {
 
                     Position posTemp = new Position(i, j);
                     
-                    alignNOSE = 1;
-                    alignSONE = 1;
-                    alignOE = 1;
-                    alignNS = 1;
+                    alignNOSE = 0;
+                    alignSONE = 0;
+                    alignOE = 0;
+                    alignNS = 0;
 
                     // additionne les pions successifs du nord-ouest et sud-est
                     alignNOSE = alignNOSE + positionDiagonaleNO(grille, posTemp, 1) + positionDiagonaleSE(grille, posTemp, 1); 
@@ -347,10 +352,10 @@ public class BotInterne implements Joueur {
 
                 } else if(grille.getData()[i][j] == 2){
 
-                    alignNOSE = 1;
-                    alignSONE = 1;
-                    alignOE = 1;
-                    alignNS = 1;
+                    alignNOSE = 0;
+                    alignSONE = 0;
+                    alignOE = 0;
+                    alignNS = 0;
 
                     Position posTemp = new Position(i, j);
 
@@ -600,7 +605,7 @@ public class BotInterne implements Joueur {
         Position posTemp = new Position();
 
         //vérifie si on est dans les limites de la grille
-        if(colonneTemp >= grille.getData()[0].length){
+        if(colonneTemp < grille.getData()[0].length){
             posTemp.ligne = ligneTemp;
             posTemp.colonne = colonneTemp;
 
